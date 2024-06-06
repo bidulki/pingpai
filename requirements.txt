@@ -1,0 +1,7 @@
+!pip install fastapi
+!pip install uvicorn
+!pip install pyngrok
+!pip install langchain
+!pip install -U langchain-community
+!pip install nest-asyncio
+!pip install sentence-transformers
