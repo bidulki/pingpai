@@ -3,7 +3,7 @@ import uvicorn
 from pydantic import BaseModel
 from utils import FAQDB
 
-faq_path = "./faq.pickle"
+faq_path = "./faq.tsv"
 index_path = "./faq.index"
 model_name = "jhgan/ko-sbert-nli"
 

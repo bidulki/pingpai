@@ -2,6 +2,7 @@ import os
 import pickle
 from langchain.vectorstores import FAISS
 from langchain.embeddings import HuggingFaceEmbeddings
+import pandas as pd
 
 class FAQDB:
     def __init__(self, faq_path, index_path, model_name):
@@ -13,8 +14,17 @@ class FAQDB:
     
     def load_faq(self):
         if os.path.exists(self.faq_path):
-            with open(self.faq_path, 'rb') as f:
-                faq_list = pickle.load(f)
+            df = pd.read_csv(self.faq_path, sep="\t")
+            question_list = df['question'].to_list()
+            answer_list = df['answer'].to_list()
+            faq_list = list()
+            for question, answer in zip(question_list, answer_list):
+                faq={
+                    'question': question,
+                    'answer': answer
+                }
+                faq_list.append(faq)
+
         else:
             faq_list = list()
         return faq_list
@@ -22,6 +32,17 @@ class FAQDB:
     def save_faq(self):
         with open(self.faq_path, 'wb') as f:
             pickle.dump(self.faq_list, f)
+        df = pd.DataFrame()
+        question_list = []
+        answer_list = []
+        for faq in self.faq_list:
+            question = faq['question']
+            answer = faq['answer']
+            question_list.append(question)
+            answer_list.append(answer)
+        df['question'] = question_list
+        df['ansewr'] = answer_list
+        df.to_csv("faq.tsv", index=False, sep="\t")
 
     def load_embedding_model(self, model_name):
         embedding_model = HuggingFaceEmbeddings(
