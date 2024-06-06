@@ -8,7 +8,7 @@
 NgrokTunnel: url -> "http://localhost:8000"의 url을 복사해서 client.py의 url에 붙여넣기
 ex) url = "https://4eca-34-145-30-155.ngrok-free.app"
 
-## 4. client.py 다운해서 로컬에서 실행
+## 4. client.py 다운해서 로컬에서 실행(git clone으로)
 <img width="263" alt="image" src="https://github.com/bidulki/pingpai/assets/55395688/0ffe117e-8ee9-4c61-ab5d-d4576524650b">
 
 1. faq 리스트 출력
@@ -17,3 +17,8 @@ ex) url = "https://4eca-34-145-30-155.ngrok-free.app"
 4. faq 검색
 5. 실시간 검색기능( 구현 안됨 )
 6. 종료
+
+## 5. 데이터 확인
+faq.tsv에 client.py로 추가, 제거가 반영된 데이터가 기록됩니다.  
+각자 쌓은 데이터 공유해주시면 감사하겠습니다.
+ex)
