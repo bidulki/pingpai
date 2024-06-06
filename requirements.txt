@@ -1,7 +1,8 @@
-!pip install fastapi
-!pip install uvicorn
-!pip install pyngrok
-!pip install langchain
-!pip install -U langchain-community
-!pip install nest-asyncio
-!pip install sentence-transformers
+fastapi
+uvicorn
+pyngrok
+langchain
+langchain-community
+nest-asyncio
+sentence-transformers
+faiss-gpu
