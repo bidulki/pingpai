@@ -20,7 +20,7 @@ def delete_faq(idx):
         "idx": idx
     }
     res = requests.post(url + '/api/delete-faq', json=param)
-    return res.content
+    return res.content-35
 
 def search_faq(query, topk):
     param = {

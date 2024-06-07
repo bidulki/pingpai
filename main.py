@@ -1,17 +1,30 @@
 from fastapi import FastAPI
 import uvicorn
 from pydantic import BaseModel
-from utils import FAQDB
+from utils import FAQDB , RealTimeDB
 
 faq_path = "./faq.tsv"
 index_path = "./faq.index"
 model_name = "jhgan/ko-sbert-nli"
+document_path = "./document.tsv"
+document_index_path = "./document.index"
+history_path = "qa_history.tsv"
+
+
 
 faqdb = FAQDB(
     faq_path=faq_path, 
     index_path=index_path, 
     model_name=model_name
 )
+
+real_time_db = RealTimeDB(
+    document_path=document_path, 
+    document_index_path=document_index_path, 
+    model_name=model_name,
+    history_path = history_path
+)
+
 
 class FAQ(BaseModel):
     question: str
@@ -47,7 +60,11 @@ async def search_faq(faq_query : FaqQuery):
     return res
 
 @app.post("/api/search-realtime")
-async def search_realtime():
-    return
+async def search_realtime(query : str ):
+    res = real_time_db.search_realtime(query)
+    return res
+
+print(search_realtime("hello"))
+
 
 uvicorn.run(app, host="0.0.0.0", port=7000)
