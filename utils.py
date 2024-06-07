@@ -3,6 +3,7 @@ import pickle
 from langchain.vectorstores import FAISS
 from langchain.embeddings import HuggingFaceEmbeddings
 import pandas as pd
+from langchain.llms import OpenAI
 
 class FAQDB:
     def __init__(self, faq_path, index_path, model_name):
@@ -109,9 +110,56 @@ class FAQDB:
 
 
 
-
-
-
+class RealTimeDB:
+    def __init__(self, document_path, index_path, model_name, history_path):
+        self.document_path = document_path
+        self.index_path = index_path
+        self.embedding_model = self.load_embedding_model(model_name)
+        self.document_list = self.load_doc_dic()
+        self.index = self.load_index()
+        self.history_path = history_path
 
     
+    def load_doc_dic(self):
+        if os.path.exists(self.document_path):
+            df = pd.read_csv(self.document_path, delimiter="\t")
+            did_list = df['did'].to_list()
+            document_list = df['document'].to_list()
+        else:
+            document_list=[]
+        return document_list
 
+
+    def load_embedding_model(self, model_name):
+        embedding_model = HuggingFaceEmbeddings(
+            model_name=model_name,
+            model_kwargs={'device':'cuda:0'},
+            encode_kwargs={'normalize_embeddings':True})
+        return embedding_model
+    
+    def load_index(self):
+        if os.path.exists(self.index_path):
+            index = FAISS.load_local(self.index_path, self.embedding_model, allow_dangerous_deserialization=True)
+        else:
+            index = FAISS.from_texts(self.document_list, embedding=self.embedding_model)
+            index.save_local(self.index_path)
+        return index
+    
+    def qa_prompt(self,query,documents,prompt_filename='config/SKKU.prompt'):
+        with open(prompt_filename) as f:
+            prompt_template = f.read().rstrip("\n")
+        formatted_documents = []
+        for document_index, document in enumerate(documents):
+            formatted_documents.append(f"문서[{document_index+1}] {document}")
+        return prompt_template.format(query=query, search_results="\n".join(formatted_documents))    
+        
+    def search_realtime(self, query, topk=1):
+        api_key = os.getenv('OPENAI_API_KEY')
+        topk_document_list = self.index.similarity_search(query, topk)
+        prompt = self.qa_prompt(query,topk_document_list)
+        llm = OpenAI(api_key = api_key)
+        from IPython import embed ; embed()
+        responese = llm(prompt)
+        with open(self.history_path, "a", encoding="utf-8") as file:
+            file.write(f"{query}\t{responese}\n")
+        return responese
