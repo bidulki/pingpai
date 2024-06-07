@@ -21,5 +21,6 @@ ex) url = "https://4eca-34-145-30-155.ngrok-free.app"
 ## 5. 데이터 확인
 faq.tsv에 client.py로 추가, 제거가 반영된 데이터가 기록됩니다.  
 각자 쌓은 데이터 공유해주시면 감사하겠습니다.  
-<img width="758" alt="image" src="https://github.com/bidulki/pingpai/assets/55395688/074c159a-d995-4471-8b85-dd70aee7d529">
+<img width="718" alt="image" src="https://github.com/bidulki/pingpai/assets/55395688/b4138209-2627-4675-af6e-c1f079ce7ff3">
+
 
