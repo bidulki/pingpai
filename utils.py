@@ -158,8 +158,10 @@ class RealTimeDB:
         topk_document_list = self.index.similarity_search(query, topk)
         prompt = self.qa_prompt(query,topk_document_list)
         llm = OpenAI(api_key = api_key)
-        from IPython import embed ; embed()
         responese = llm(prompt)
         with open(self.history_path, "a", encoding="utf-8") as file:
             file.write(f"{query}\t{responese}\n")
-        return responese
+        
+        
+        return {'answer': responese}
+

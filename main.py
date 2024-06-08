@@ -8,7 +8,7 @@ index_path = "./faq.index"
 model_name = "jhgan/ko-sbert-nli"
 document_path = "./document.tsv"
 document_index_path = "./document.index"
-history_path = "qa_history.tsv"
+history_path = "./qa_history.tsv"
 
 
 
@@ -20,7 +20,7 @@ faqdb = FAQDB(
 
 real_time_db = RealTimeDB(
     document_path=document_path, 
-    document_index_path=document_index_path, 
+    index_path=document_index_path, 
     model_name=model_name,
     history_path = history_path
 )
@@ -36,6 +36,9 @@ class RemoveIdx(BaseModel):
 class FaqQuery(BaseModel):
     query: str
     topk: int
+class RealQuery(BaseModel):
+    query: str
+
 
 app = FastAPI()
 
@@ -60,11 +63,10 @@ async def search_faq(faq_query : FaqQuery):
     return res
 
 @app.post("/api/search-realtime")
-async def search_realtime(query : str ):
-    res = real_time_db.search_realtime(query)
+async def search_realtime(real_query : RealQuery ):
+    res = real_time_db.search_realtime(real_query.query)
     return res
 
-print(search_realtime("hello"))
 
 
-uvicorn.run(app, host="0.0.0.0", port=7000)
+uvicorn.run(app, host="127.0.0.1", port=8000)

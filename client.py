@@ -1,7 +1,7 @@
 import requests
 import json
 
-url = "http://127.0.0.1:7000"
+url = "http://127.0.0.1:8000"
 
 def get_faq():
     res =requests.post(url + '/api/get-faq')
@@ -30,7 +30,7 @@ def search_faq(query, topk):
     res = requests.post(url + "/api/search-faq", json=param)
     return res.content
 
-def search_realtime():
+def search_realtime(query):
     param = {
         "query": query
     }
@@ -79,8 +79,11 @@ while(True):
 
     elif option=="5":
         query = input("Q: ")
-        answer = search_realtime(query)
-        print(f'A: {res}')
+        res = json.loads(search_realtime(query))
+        print(query)
+        print(res)
+        answer = res['answer']
+        print(f'A: {answer}')
     
     else:
         break
