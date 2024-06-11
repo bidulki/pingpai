@@ -115,19 +115,22 @@ class RealTimeDB:
         self.document_path = document_path
         self.index_path = index_path
         self.embedding_model = self.load_embedding_model(model_name)
-        self.document_list = self.load_doc_dic()
+        self.doc_dic = self.load_doc_dic()
         self.index = self.load_index()
         self.history_path = history_path
 
     
     def load_doc_dic(self):
         if os.path.exists(self.document_path):
+            doc_dic={}
             df = pd.read_csv(self.document_path, delimiter="\t")
-            did_list = df['did'].to_list()
+            url_list = df['did'].to_list()
             document_list = df['document'].to_list()
+            for d_i, d in enumerate(document_list):
+                doc_dic[d] = url_list[d_i] 
         else:
-            document_list=[]
-        return document_list
+            doc_dic={}
+        return doc_dic
 
 
     def load_embedding_model(self, model_name):
@@ -154,14 +157,21 @@ class RealTimeDB:
         return prompt_template.format(query=query, search_results="\n".join(formatted_documents))    
         
     def search_realtime(self, query, topk=1):
-        api_key = os.getenv('OPENAI_API_KEY')
+        api_key ="sk-proj-0SPGwDGsnFum7WS2wMGpT3BlbkFJwdLZHeFJcEa2gSdCuIFV"
         topk_document_list = self.index.similarity_search(query, topk)
         prompt = self.qa_prompt(query,topk_document_list)
-        llm = OpenAI(api_key = api_key)
-        responese = llm(prompt)
-        with open(self.history_path, "a", encoding="utf-8") as file:
-            file.write(f"{query}\t{responese}\n")
+        url_list=[]
+        if (len(topk_document_list)==0):
+            responese='검색된 결과가 없습니다. faq 서비스를 이용해주세요'
+            url_list=['']
+        else:
+            for d in topk_document_list:
+                url_list.append(self.doc_dic[d.page_content])
+            llm = OpenAI(api_key = api_key)
+            responese = llm(prompt)
+            with open(self.history_path, "a", encoding="utf-8") as file:
+                file.write(f"{query}\t{responese}\n")
         
         
-        return {'answer': responese}
+        return {'answer': responese, 'url_list': url_list}
 
