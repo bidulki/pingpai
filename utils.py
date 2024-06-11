@@ -143,7 +143,7 @@ class RealTimeDB:
         if os.path.exists(self.index_path):
             index = FAISS.load_local(self.index_path, self.embedding_model, allow_dangerous_deserialization=True)
         else:
-            index = FAISS.from_texts(self.document_list, embedding=self.embedding_model)
+            index = FAISS.from_texts(self.doc_dic.keys(), embedding=self.embedding_model)
             index.save_local(self.index_path)
         return index
     
