@@ -69,4 +69,4 @@ async def search_realtime(real_query : RealQuery ):
 
 
 
-uvicorn.run(app, host="127.0.0.1", port=8000)
+uvicorn.run(app, host="127.0.0.1", port=7000)

@@ -76,7 +76,7 @@ while(True):
         res = json.loads(search_faq(query, topk))
         for i in res.keys():
             print(f"{i}: {res[i]['question']}")
-            print(f"{res[i]['answer']}")
+            print(f"{res[i]['answer']}\n")
 
     elif option=="5":
         query = input("Q: ")

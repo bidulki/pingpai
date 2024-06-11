@@ -42,7 +42,7 @@ class FAQDB:
             question_list.append(question)
             answer_list.append(answer)
         df['question'] = question_list
-        df['ansewr'] = answer_list
+        df['answer'] = answer_list
         df.to_csv("faq.tsv", index=False, sep="\t")
 
     def load_embedding_model(self, model_name):
@@ -99,13 +99,12 @@ class FAQDB:
     def search_faq(self, query, topk):
         topk_question_list = self.index.similarity_search(query, topk)
         question_list = [faq['question'] for faq in self.faq_list]
-        answer_list = []
+        topk_faq_list = []
         for question in topk_question_list:
-            answer = self.faq_list[question_list.index(question.page_content)]['answer']
-            answer_list.append(answer)
+            topk_faq_list.append(self.faq_list[question_list.index(question.page_content)])
         res = dict()
-        for i, answer in enumerate(answer_list):
-            res[i] = {"question": question.page_content, "answer": answer}
+        for i, faq in enumerate(topk_faq_list):
+            res[i] = {"question": faq['question'], "answer": faq['answer']}
         return res
 
 
