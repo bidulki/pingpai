@@ -105,7 +105,7 @@ class FAQDB:
             answer_list.append(answer)
         res = dict()
         for i, answer in enumerate(answer_list):
-            res[i] = answer
+            res[i] = {"question": question.page_content, "answer": answer}
         return res
 
 

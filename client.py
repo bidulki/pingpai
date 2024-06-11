@@ -1,7 +1,7 @@
 import requests
 import json
 
-url = "http://127.0.0.1:8000"
+url = "http://127.0.0.1:7000"
 
 def get_faq():
     res =requests.post(url + '/api/get-faq')
@@ -20,7 +20,7 @@ def delete_faq(idx):
         "idx": idx
     }
     res = requests.post(url + '/api/delete-faq', json=param)
-    return res.content-35
+    return res.content
 
 def search_faq(query, topk):
     param = {
@@ -75,7 +75,8 @@ while(True):
         topk = input("topk: ")
         res = json.loads(search_faq(query, topk))
         for i in res.keys():
-            print(f"{i}: {res[i]}")
+            print(f"{i}: {res[i]['question']}")
+            print(f"{res[i]['answer']}")
 
     elif option=="5":
         query = input("Q: ")
