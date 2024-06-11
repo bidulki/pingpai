@@ -81,10 +81,10 @@ while(True):
     elif option=="5":
         query = input("Q: ")
         res = json.loads(search_realtime(query))
-        print(query)
-        print(res)
         answer = res['answer']
+        url = res['url_list'][0]
         print(f'A: {answer}')
+        print(f'url: {url}')
     
     else:
         break
