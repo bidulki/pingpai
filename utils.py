@@ -157,7 +157,7 @@ class RealTimeDB:
         return prompt_template.format(query=query, search_results="\n".join(formatted_documents))    
         
     def search_realtime(self, query, topk=1):
-        api_key ="sk-proj-0SPGwDGsnFum7WS2wMGpT3BlbkFJwdLZHeFJcEa2gSdCuIFV"
+        api_key = os.getenv('OPENAI_API_KEY')
         topk_document_list = self.index.similarity_search(query, topk)
         prompt = self.qa_prompt(query,topk_document_list)
         url_list=[]
